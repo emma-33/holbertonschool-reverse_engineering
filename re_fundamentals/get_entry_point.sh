@@ -25,10 +25,10 @@ if ! file "$file_name" | grep -q 'ELF'
 fi
 
 #get needed info
-magic_number=$(readelf -h "$file_name" | awk '/Magic:/ {for (i=2; i<=NF; i++) printf $i " "; print ""}' | xargs)
-class=$(readelf -h "$file_name" | awk '/Class:/ {print $2}')
-byte_order=$(readelf -h "$file_name" | awk '/Data:/ {print $2}')
-entry_point_address=$(readelf -h "$file_name" | awk '/Entry point address:/ {print $4}' | xargs)
+magic_number=$(readelf -h $file_name | grep 'Magic:' | cut -d: -f2 | xargs)
+class=$(readelf -h $file_name | grep 'Class:' | cut -d: -f2 | xargs)
+byte_order=$(readelf -h $file_name | grep 'Data:' | cut -d, -f2 | sed 's/^[[:space:]]*//')
+entry_point_address=$(readelf -h $file_name | grep 'Entry point address:' | cut -d: -f2 | xargs)
 
 #display info using func in messages.sh
 display_elf_header_info
